@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Comisionamiento</title>
+
+<style>
+
+body{
+    background:#9CCC65;
+    font-family:Arial;
+    margin:0;
+    padding:20px;
+}
+
+.formulario{
+    max-width:800px;
+    width:100%;
+    margin:auto;
+}
+
+input,
+textarea,
+select{
+    width:100%;
+    padding:12px;
+    margin-bottom:15px;
+    box-sizing:border-box;
+    font-size:16px;
+}
+
+button{
+    background:#5c7c1f;
+    color:white;
+    border:none;
+    padding:15px;
+    width:100%;
+    font-size:18px;
+    cursor:pointer;
+    border-radius:5px;
+}
+
+h2{
+    text-align:center;
+}
+
+@media (max-width:768px){
+
+    body{
+        padding:10px;
+    }
+
+    h2{
+        font-size:28px;
+    }
+
+    label{
+        font-size:18px;
+    }
+
+    input,
+    textarea,
+    select{
+        font-size:16px;
+    }
+
+    button{
+        min-height:55px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="formulario">
+
+<h2>FORMULARIO DE COMISIONAMIENTO</h2>
+
+<form method="POST" enctype="multipart/form-data">
+
+<label>Proyecto</label>
+
+<select name="proyecto" required>
+
+    <option value="">
+    Seleccione Proyecto
+    </option>
+
+    {% for proyecto in proyectos %}
+
+    <option value="{{ proyecto }}">
+    {{ proyecto }}
+    </option>
+
+    {% endfor %}
+
+</select>
+
+<label>Líder o Encargado</label>
+
+<input
+type="text"
+name="lider"
+required>
+
+<label>Fecha</label>
+
+<input
+type="date"
+name="fecha"
+required>
+
+<label>Tipo de Comisionamiento</label>
+
+<select
+name="tipocomisionamiento"
+required>
+
+    <option value="">
+    Seleccione Tipo
+    </option>
+
+    <option>Precomisionamiento</option>
+    <option>Comisionamiento</option>
+    <option>Puesta en Servicio</option>
+
+</select>
+
+<label>Reporte de novedades</label>
+
+<textarea
+rows="5"
+name="novedades"
+required></textarea>
+
+<label>Reporte pendientes</label>
+
+<textarea
+rows="5"
+name="pendientes"
+required></textarea>
+
+<label>Adjuntar evidencias</label>
+
+<input
+type="file"
+name="evidencias"
+multiple
+required>
+
+<button type="submit">
+
+Guardar Comisionamiento
+
+</button>
+
+</form>
+
+</div>
+
+</body>
+
+</html>

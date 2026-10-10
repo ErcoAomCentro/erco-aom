@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sistema O&M</title>
+
+    <style>
+
+        body{
+            background:#8BC34A;
+            font-family:Arial;
+            text-align:center;
+        }
+
+        .contenedor{
+            margin-top:80px;
+        }
+
+        .boton{
+            display:block;
+            width:500px;
+            margin:20px auto;
+            padding:20px;
+            background:#5D7A1E;
+            color:white;
+            text-decoration:none;
+            border-radius:10px;
+            font-size:24px;
+            font-weight:bold;
+        }
+
+        .boton:hover{
+            background:#4F6819;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="contenedor">
+
+    <h1>SISTEMA DE GESTIÓN DE MANTENIMIENTO</h1>
+
+    <button
+        class="boton">
+        📁 1. Planos Eléctricos
+    </button>
+
+    <button
+        class="boton"
+        onclick="window.location.href='/mantenimiento'">
+        📝 2. Diligenciar Informe Mantenimiento
+    </button>
+
+    <button
+        class="boton"
+        onclick="window.location.href='/consultar'">
+        📋 3. Consultar Mantenimientos
+    </button>
+
+    <button
+        class="boton"
+        onclick="window.location.href='/comisionamiento'">
+        ⚡ 4. Diligenciar Informe Comisionamiento
+
+    </button>
+
+    <button
+        class="boton"
+        onclick="window.location.href='/consultar_comisionamiento'">
+        📋 Consultar Comisionamientos
+
+    </button>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Consultar Mantenimientos</title>
+
+<style>
+
+button{
+    background:#4CAF50;
+    color:white;
+    border:none;
+    padding:8px;
+    cursor:pointer;
+}
+
+body{
+    font-family:Arial;
+    background:#f4f4f4;
+}
+
+.contenedor{
+    width:95%;
+    margin:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+}
+
+th{
+    background:#4CAF50;
+    color:white;
+    padding:10px;
+}
+
+td{
+    padding:8px;
+    border:1px solid #ccc;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="contenedor">
+
+<h2>Histórico de Mantenimientos</h2>
+
+<table>
+
+<tr>
+<th>ID</th>
+<th>Fecha</th>
+<th>Proyecto</th>
+<th>Líder</th>
+<th>Tipo</th>
+<th>Acciones</th>
+</tr>
+
+{% for fila in registros %}
+
+<tr>
+
+<td>{{ fila["ID"] }}</td>
+<td>{{ fila["Fecha"] }}</td>
+<td>{{ fila["Proyecto"] }}</td>
+<td>{{ fila["LiderEncargado"] }}</td>
+<td>{{ fila["TipoMantenimiento"] }}</td>
+<td>
+
+<button
+onclick="window.location.href='/detalle/{{ fila.ID }}'">
+
+Ver Evidencias
+
+</button>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+<br>
+
+<button onclick="window.location.href='/'">
+Volver al menú
+</button>
+
+</div>
+
+</body>
+
+</html>

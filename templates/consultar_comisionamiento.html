@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Consultar Comisionamientos</title>
+
+<style>
+
+body{
+    font-family:Arial;
+    background:#f4f4f4;
+}
+
+.contenedor{
+    width:95%;
+    margin:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+}
+
+th{
+    background:#1565C0;
+    color:white;
+    padding:10px;
+}
+
+td{
+    padding:8px;
+    border:1px solid #ccc;
+}
+
+input{
+    padding:10px;
+    width:250px;
+    margin-right:10px;
+}
+
+button{
+    background:#1565C0;
+    color:white;
+    border:none;
+    padding:10px;
+    cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="contenedor">
+
+<h2>Histórico de Comisionamientos</h2>
+
+<form method="GET">
+
+<input
+type="text"
+name="id"
+placeholder="Buscar por ID"
+value="{{ filtro_id }}">
+
+<input
+type="text"
+name="proyecto"
+placeholder="Buscar por Proyecto"
+value="{{ filtro_proyecto }}">
+
+<input
+type="text"
+name="lider"
+placeholder="Buscar por Líder"
+value="{{ filtro_lider }}">
+
+<button type="submit">
+Filtrar
+</button>
+
+<button
+type="button"
+onclick="window.location.href='/consultar_comisionamiento'">
+
+Limpiar
+
+</button>
+
+</form>
+
+<br>
+
+<table>
+
+<tr>
+
+<th>ID</th>
+<th>Fecha</th>
+<th>Proyecto</th>
+<th>Líder</th>
+<th>Tipo</th>
+<th>Acciones</th>
+
+</tr>
+
+{% for fila in registros %}
+
+<tr>
+
+<td>{{ fila["ID"] }}</td>
+
+<td>{{ fila["Fecha"] }}</td>
+
+<td>{{ fila["Proyecto"] }}</td>
+
+<td>{{ fila["LiderEncargado"] }}</td>
+
+<td>{{ fila["TipoMantenimiento"] }}</td>
+
+<td>
+
+<button
+onclick="window.location.href='/detalle_comisionamiento/{{ fila.ID }}'">
+
+Ver Evidencias
+
+</button>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+<br><br>
+
+<button onclick="window.location.href='/'">
+
+Volver al menú
+
+</button>
+
+</div>
+
+</body>
+
+</html>

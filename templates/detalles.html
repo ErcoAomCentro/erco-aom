@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Detalle Mantenimiento</title>
+
+<style>
+
+body{
+    font-family:Arial;
+    background:#f5f5f5;
+    margin:30px;
+}
+
+.tarjeta{
+    background:white;
+    padding:20px;
+    border-radius:10px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+td{
+    padding:10px;
+    border:1px solid #ddd;
+}
+
+h1{
+    color:#2e7d32;
+}
+
+ul{
+    padding-left:20px;
+}
+
+li{
+    margin-bottom:10px;
+}
+
+button{
+    background:#4CAF50;
+    color:white;
+    border:none;
+    padding:12px 20px;
+    cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="tarjeta">
+
+<h1>{{ registro["ID"] }}</h1>
+
+<h2>Evidencias</h2>
+
+{% for archivo in archivos %}
+
+<div style="margin-bottom:30px;">
+
+    <p><b>{{ archivo }}</b></p>
+
+    {% if archivo.lower().endswith('.jpg')
+    or archivo.lower().endswith('.jpeg')
+    or archivo.lower().endswith('.png') %}
+
+    <img
+        src={{ url_for('evidencia', id_mtto=registro.ID, archivo=archivo) }}
+
+    {% endif %}
+
+</div>
+
+{% endfor %}
+
+<table>
+
+<tr>
+<td><b>Proyecto</b></td>
+<td>{{ registro["Proyecto"] }}</td>
+</tr>
+
+<tr>
+<td><b>Fecha</b></td>
+<td>{{ registro["Fecha"] }}</td>
+</tr>
+
+<tr>
+<td><b>Líder</b></td>
+<td>{{ registro["LiderEncargado"] }}</td>
+</tr>
+
+<tr>
+<td><b>Tipo</b></td>
+<td>{{ registro["TipoMantenimiento"] }}</td>
+</tr>
+
+<tr>
+<td><b>Servicio Adicional</b></td>
+<td>{{ registro["ServicioAdicional"] }}</td>
+</tr>
+
+<tr>
+<td><b>Novedades</b></td>
+<td>{{ registro["ReporteNovedades"] }}</td>
+</tr>
+
+<tr>
+<td><b>Pendientes</b></td>
+<td>{{ registro["ReportePendientes"] }}</td>
+</tr>
+
+<tr>
+<td><b>Ruta Evidencias</b></td>
+<td style="word-break: break-all;">
+{{ registro["RutaLocal"] }}
+</td>
+</tr>
+
+</table>
+
+    
+<br>
+
+<button onclick="window.history.back()">
+Volver
+</button>
+
+</div>
+
+</body>
+
+</html>
