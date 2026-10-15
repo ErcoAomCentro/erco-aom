@@ -3,20 +3,29 @@
 
 <head>
 
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Detalle Comisionamiento</title>
 
 <style>
 
+*{
+    box-sizing:border-box;
+}
+
 body{
     font-family:Arial;
     background:#f5f5f5;
-    margin:30px;
+    margin:10px;
 }
 
 .tarjeta{
     background:white;
     padding:20px;
     border-radius:10px;
+    max-width:1000px;
+    margin:auto;
 }
 
 table{
@@ -27,10 +36,12 @@ table{
 td{
     padding:10px;
     border:1px solid #ddd;
+    vertical-align:top;
 }
 
 h1{
     color:#1565C0;
+    word-break:break-word;
 }
 
 button{
@@ -39,6 +50,43 @@ button{
     border:none;
     padding:12px 20px;
     cursor:pointer;
+    border-radius:5px;
+}
+
+.info{
+    background:#f8f9fa;
+    border:1px solid #ddd;
+    padding:15px;
+    margin-bottom:20px;
+    border-radius:5px;
+}
+
+.ruta{
+    word-break:break-all;
+}
+
+@media (max-width:768px){
+
+    body{
+        margin:5px;
+    }
+
+    .tarjeta{
+        padding:10px;
+    }
+
+    table,
+    tbody,
+    tr,
+    td{
+        display:block;
+        width:100%;
+    }
+
+    td{
+        border:1px solid #ddd;
+    }
+
 }
 
 </style>
@@ -51,26 +99,19 @@ button{
 
 <h1>{{ registro["ID"] }}</h1>
 
-<h2>Evidencias</h2>
+<div class="info">
 
-{% for archivo in archivos %}
+<b>Cantidad de Evidencias:</b>
 
-<div style="margin-bottom:30px;">
+{{ archivos|length }}
 
-    <p><b>{{ archivo }}</b></p>
+</div>
 
-    {% if archivo.lower().endswith('.jpg')  
-    or archivo.lower().endswith('.jpeg')
-    or archivo.lower().endswith('.png') %}
-    
-    }}"
+<table>
 
-    <img
-        src="{{ url_for('evidencia_comisionamiento', id_com=registro.ID, archivo=archivo) }}"
-        width="400"
-        style="border:1px solid #ccc; padding:5px; border-radius:8px;">
-    {% endif %}
-    
+<tr>
+<td><b>Proyecto</b></td>
+<td>{{ registro["Proyecto"] }}</td>
 </tr>
 
 <tr>
@@ -84,28 +125,23 @@ button{
 </tr>
 
 <tr>
-<td><b>Tipo</b></td>
-<td>{{ registro["TipoMantenimiento"] }}</td>
+<td><b>Tipo de Comisionamiento</b></td>
+<td>{{ registro["TipoComisionamiento"] }}</td>
 </tr>
 
 <tr>
-<td><b>Servicio Adicional</b></td>
-<td>{{ registro["ServicioAdicional"] }}</td>
-</tr>
-
-<tr>
-<td><b>Novedades</b></td>
+<td><b>Reporte de Novedades</b></td>
 <td>{{ registro["ReporteNovedades"] }}</td>
 </tr>
 
 <tr>
-<td><b>Pendientes</b></td>
+<td><b>Reporte de Pendientes</b></td>
 <td>{{ registro["ReportePendientes"] }}</td>
 </tr>
 
 <tr>
 <td><b>Ruta Evidencias</b></td>
-<td style="word-break: break-all;">
+<td class="ruta">
 {{ registro["RutaLocal"] }}
 </td>
 </tr>

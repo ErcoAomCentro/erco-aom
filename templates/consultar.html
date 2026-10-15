@@ -2,18 +2,9 @@
 <html>
 
 <head>
-
 <title>Consultar Mantenimientos</title>
 
 <style>
-
-button{
-    background:#4CAF50;
-    color:white;
-    border:none;
-    padding:8px;
-    cursor:pointer;
-}
 
 body{
     font-family:Arial;
@@ -32,7 +23,7 @@ table{
 }
 
 th{
-    background:#4CAF50;
+    background:#1565C0;
     color:white;
     padding:10px;
 }
@@ -40,6 +31,20 @@ th{
 td{
     padding:8px;
     border:1px solid #ccc;
+}
+
+input{
+    padding:10px;
+    width:250px;
+    margin-right:10px;
+}
+
+button{
+    background:#1565C0;
+    color:white;
+    border:none;
+    padding:10px;
+    cursor:pointer;
 }
 
 </style>
@@ -51,6 +56,40 @@ td{
 <div class="contenedor">
 
 <h2>Histórico de Mantenimientos</h2>
+
+<form method="GET">
+
+<input
+type="text"
+name="id"
+placeholder="Buscar por ID"
+value="{{ filtro_id }}">
+
+<input
+type="text"
+name="proyecto"
+placeholder="Buscar por Proyecto"
+value="{{ filtro_proyecto }}">
+
+<input
+type="text"
+name="lider"
+placeholder="Buscar por Líder"
+value="{{ filtro_lider }}">
+
+<button type="submit">
+Filtrar
+</button>
+
+<button
+type="button"
+onclick="window.location.href='/consultar'">
+Limpiar
+</button>
+
+</form>
+
+<br>
 
 <table>
 
@@ -72,15 +111,12 @@ td{
 <td>{{ fila["Proyecto"] }}</td>
 <td>{{ fila["LiderEncargado"] }}</td>
 <td>{{ fila["TipoMantenimiento"] }}</td>
-<td>
 
+<td>
 <button
 onclick="window.location.href='/detalle/{{ fila.ID }}'">
-
 Ver Evidencias
-
 </button>
-
 </td>
 
 </tr>
@@ -89,7 +125,7 @@ Ver Evidencias
 
 </table>
 
-<br>
+<br><br>
 
 <button onclick="window.location.href='/'">
 Volver al menú

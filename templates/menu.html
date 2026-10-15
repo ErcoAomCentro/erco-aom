@@ -1,48 +1,102 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Sistema O&M</title>
 
     <style>
 
+        *{
+            box-sizing:border-box;
+        }
+
         body{
             background:#8BC34A;
-            font-family:Arial;
+            font-family:Arial, sans-serif;
             text-align:center;
+            margin:0;
+            padding:20px;
         }
 
         .contenedor{
-            margin-top:80px;
+            max-width:700px;
+            margin:auto;
+            padding-top:20px;
+        }
+
+        h1{
+            color:#1f1f1f;
+            font-size:32px;
+            margin-bottom:10px;
+        }
+
+        .subtitulo{
+            font-size:18px;
+            color:#333;
+            margin-bottom:40px;
         }
 
         .boton{
             display:block;
-            width:500px;
-            margin:20px auto;
-            padding:20px;
+            width:100%;
+            margin:15px auto;
+            padding:22px;
             background:#5D7A1E;
             color:white;
             text-decoration:none;
-            border-radius:10px;
-            font-size:24px;
+            border:none;
+            border-radius:12px;
+            font-size:22px;
             font-weight:bold;
+            cursor:pointer;
+            transition:0.3s;
         }
 
         .boton:hover{
             background:#4F6819;
         }
 
+        @media screen and (max-width:768px){
+
+            body{
+                padding:15px;
+            }
+
+            h1{
+                font-size:24px;
+            }
+
+            .subtitulo{
+                font-size:15px;
+            }
+
+            .boton{
+                font-size:18px;
+                padding:18px;
+            }
+
+        }
+
     </style>
+
 </head>
 
 <body>
 
 <div class="contenedor">
 
-    <h1>SISTEMA DE GESTIÓN DE MANTENIMIENTO</h1>
+    <h1>⚡ SISTEMA DE GESTIÓN O&M</h1>
+
+    <div class="subtitulo">
+        Operación, Mantenimiento y Comisionamiento
+    </div>
 
     <button
-        class="boton">
+        class="boton"
+        onclick="window.location.href='/planos'">
         📁 1. Planos Eléctricos
     </button>
 
@@ -62,14 +116,12 @@
         class="boton"
         onclick="window.location.href='/comisionamiento'">
         ⚡ 4. Diligenciar Informe Comisionamiento
-
     </button>
 
     <button
         class="boton"
         onclick="window.location.href='/consultar_comisionamiento'">
-        📋 Consultar Comisionamientos
-
+        📋 5. Consultar Comisionamientos
     </button>
 
 </div>

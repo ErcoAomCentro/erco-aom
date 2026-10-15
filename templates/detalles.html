@@ -3,20 +3,29 @@
 
 <head>
 
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Detalle Mantenimiento</title>
 
 <style>
 
+*{
+    box-sizing:border-box;
+}
+
 body{
     font-family:Arial;
     background:#f5f5f5;
-    margin:30px;
+    margin:10px;
 }
 
 .tarjeta{
     background:white;
     padding:20px;
     border-radius:10px;
+    max-width:1000px;
+    margin:auto;
 }
 
 table{
@@ -27,18 +36,12 @@ table{
 td{
     padding:10px;
     border:1px solid #ddd;
+    vertical-align:top;
 }
 
 h1{
     color:#2e7d32;
-}
-
-ul{
-    padding-left:20px;
-}
-
-li{
-    margin-bottom:10px;
+    word-break:break-word;
 }
 
 button{
@@ -47,6 +50,43 @@ button{
     border:none;
     padding:12px 20px;
     cursor:pointer;
+    border-radius:5px;
+}
+
+.info{
+    background:#f8f9fa;
+    border:1px solid #ddd;
+    padding:15px;
+    margin-bottom:20px;
+    border-radius:5px;
+}
+
+.ruta{
+    word-break:break-all;
+}
+
+@media (max-width:768px){
+
+    body{
+        margin:5px;
+    }
+
+    .tarjeta{
+        padding:10px;
+    }
+
+    table,
+    tbody,
+    tr,
+    td{
+        display:block;
+        width:100%;
+    }
+
+    td{
+        border:1px solid #ddd;
+    }
+
 }
 
 </style>
@@ -59,26 +99,33 @@ button{
 
 <h1>{{ registro["ID"] }}</h1>
 
-<h2>Evidencias</h2>
+<div class="info">
 
-{% for archivo in archivos %}
+<b>Proyecto:</b>
+{{ registro["Proyecto"] }}
 
-<div style="margin-bottom:30px;">
+<br><br>
 
-    <p><b>{{ archivo }}</b></p>
+<b>Cantidad de Evidencias:</b>
+{{ archivos|length }}
 
-    {% if archivo.lower().endswith('.jpg')
-    or archivo.lower().endswith('.jpeg')
-    or archivo.lower().endswith('.png') %}
+<br><br>
 
-    <img
-        src={{ url_for('evidencia', id_mtto=registro.ID, archivo=archivo) }}
+<b>Novedades:</b>
 
-    {% endif %}
-
+<div style="margin-top:8px; white-space:pre-wrap;">
+{{ registro["ReporteNovedades"] }}
 </div>
 
-{% endfor %}
+<br>
+
+<b>Pendientes:</b>
+
+<div style="margin-top:8px; white-space:pre-wrap;">
+{{ registro["ReportePendientes"] }}
+</div>
+
+</div>
 
 <table>
 
@@ -108,25 +155,14 @@ button{
 </tr>
 
 <tr>
-<td><b>Novedades</b></td>
-<td>{{ registro["ReporteNovedades"] }}</td>
-</tr>
-
-<tr>
-<td><b>Pendientes</b></td>
-<td>{{ registro["ReportePendientes"] }}</td>
-</tr>
-
-<tr>
 <td><b>Ruta Evidencias</b></td>
-<td style="word-break: break-all;">
-{{ registro["RutaLocal"] }}
+<td class="ruta">
+{{ registro.get("RutaLocal", "No disponible") }}
 </td>
 </tr>
 
 </table>
 
-    
 <br>
 
 <button onclick="window.history.back()">

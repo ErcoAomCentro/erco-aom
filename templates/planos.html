@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Planos Eléctricos</title>
+
+<style>
+
+body{
+    font-family:Arial;
+    background:#f4f4f4;
+}
+
+.contenedor{
+    width:95%;
+    margin:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+}
+
+th{
+    background:#1565C0;
+    color:white;
+    padding:10px;
+}
+
+td{
+    padding:8px;
+    border:1px solid #ccc;
+}
+
+input{
+    padding:10px;
+    width:250px;
+    margin-right:10px;
+}
+
+button{
+    background:#1565C0;
+    color:white;
+    border:none;
+    padding:10px;
+    cursor:pointer;
+}
+
+@media(max-width:768px){
+
+    input{
+        width:100%;
+        margin-bottom:10px;
+    }
+
+    table{
+        font-size:12px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="contenedor">
+
+<h2>Planos Eléctricos</h2>
+
+/buscar_planos
+
+<select name="proyecto" required>
+
+    <option value="">
+        Seleccione Proyecto
+    </option>
+
+    {% for proyecto in proyectos %}
+
+    <option
+    value="{{ proyecto }}"
+    {% if filtro == proyecto %}selected{% endif %}>
+        {{ proyecto }}
+    </option>
+
+    {% endfor %}
+
+</select>
+
+<button type="submit">
+    Buscar
+</button>
+
+<button
+type="button"
+onclick="window.location.href='/planos'">
+    Limpiar
+</button>
+
+</form>
+
+<br>
+
+<table>
+
+<tr>
+    <th>Plano PDF</th>
+    <th>Abrir</th>
+</tr>
+
+{% for archivo in archivos %}
+
+<tr>
+
+    <td>{{ archivo.nombre }}</td>
+
+    <td>
+        /abrir_plano?ruta={{ archivo.ruta }}
+            Abrir PDF
+        </a>
+    </td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+<br><br>
+
+<button onclick="window.location.href='/'">
+    Volver al menú
+</button>
+
+</div>
+
+</body>
+
+</html>

@@ -3,17 +3,17 @@ import pandas as pd
 from datetime import datetime
 import random
 import os
-from PIL import Image
-from pillow_heif import register_heif_opener
 from openpyxl.styles import Font, Alignment
+from flask import send_file
 
-register_heif_opener()
 from openpyxl import load_workbook
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
-ARCHIVO_EXCEL = r"C:\Users\JessidFabianHernande\OneDrive - ERCO ENERGIA SAS\Reporte informes mantenimientos.xlsx"
+app.config['MAX_CONTENT_LENGTH'] = 2 * 1024 * 1024 * 1024
+
+ARCHIVO_EXCEL = r"C:\Users\Usuario\OneDrive - ERCO ENERGIA SAS\Reporte informes mantenimientos.xlsx"
 
 EXTENSIONES_PERMITIDAS = {
     "jpg",
@@ -29,40 +29,89 @@ EXTENSIONES_PERMITIDAS = {
     "pdf"
 }
 
-def convertir_a_jpg(ruta_original):
-
-    try:
-
-        imagen = Image.open(ruta_original)
-
-        ruta_jpg = (
-            os.path.splitext(ruta_original)[0]
-            + ".jpg"
-        )
-
-        if imagen.mode != "RGB":
-            imagen = imagen.convert("RGB")
-
-        imagen.save(
-            ruta_jpg,
-            "JPEG",
-            quality=95
-        )
-
-        os.remove(ruta_original)
-
-        return ruta_jpg
-
-    except Exception as e:
-
-        print("ERROR CONVIRTIENDO IMAGEN:")
-        print(e)
-
-        return ruta_original
-
 @app.route("/")
 def menu():
     return render_template("menu.html")
+
+RUTA_PLANOS = r"C:\Users\Usuario\OneDrive - ERCO ENERGIA SAS\AOM - 001_AOM_COMERCIAL&INDUSTRIAL\02_Ejecucion\2.4_AOM_Centro\2.4.4_Mantenimiento\2.4.4.3_Anexos\Planos"
+
+@app.route("/planos")
+def planos():
+
+    df_proyectos = pd.read_excel(
+        ARCHIVO_EXCEL,
+        sheet_name="OMCE",
+        engine="openpyxl"
+    )
+
+    proyectos = (
+        df_proyectos["Proyectos"]
+        .dropna()
+        .tolist()
+    )
+
+    return render_template(
+        "planos.html",
+        proyectos=proyectos,
+        archivos=[],
+        filtro=""
+    )
+
+@app.route("/buscar_planos")
+def buscar_planos():
+
+    proyecto = request.args.get("proyecto", "").strip()
+
+    resultados = []
+
+    print("RUTA BASE:")
+    print(RUTA_PLANOS)
+
+    for raiz, carpetas, archivos in os.walk(RUTA_PLANOS):
+
+        print("CARPETA:", raiz)
+
+        for archivo in archivos:
+
+            print("ARCHIVO:", archivo)
+
+            if archivo.lower().endswith(".pdf"):
+
+                resultados.append({
+                    "nombre": archivo,
+                    "ruta": os.path.join(raiz, archivo)
+                })
+
+    print("TOTAL PDF:", len(resultados))
+
+    df_proyectos = pd.read_excel(
+        ARCHIVO_EXCEL,
+        sheet_name="OMCE",
+        engine="openpyxl"
+    )
+
+    proyectos = (
+        df_proyectos["Proyectos"]
+        .dropna()
+        .tolist()
+    )
+
+    return render_template(
+        "planos.html",
+        proyectos=proyectos,
+        archivos=resultados,
+        filtro=proyecto
+    )
+
+@app.route("/abrir_plano")
+def abrir_plano():
+
+    ruta = request.args.get("ruta")
+
+    return send_file(
+        ruta,
+        mimetype="application/pdf"
+    )
 
 
 @app.route("/consultar")
@@ -186,7 +235,7 @@ def mantenimiento():
         ano = str(fecha_actual.year)
         mes = meses[fecha_actual.month]
 
-        RUTA_SHAREPOINT_MTTO = r"C:\Users\JessidFabianHernande\OneDrive - ERCO ENERGIA SAS\AOM - 001_AOM_COMERCIAL&INDUSTRIAL\02_Ejecucion\2.4_AOM_Centro\2.4.4_Mantenimiento\2.4.4.3_Anexos\01. Mantenimientos"
+        RUTA_SHAREPOINT_MTTO = r"C:\Users\Usuario\OneDrive - ERCO ENERGIA SAS\AOM - 001_AOM_COMERCIAL&INDUSTRIAL\02_Ejecucion\2.4_AOM_Centro\2.4.4_Mantenimiento\2.4.4.3_Anexos\01. Mantenimientos"
 
         carpeta_mtto = os.path.join(
             RUTA_SHAREPOINT_MTTO,
@@ -223,6 +272,8 @@ def mantenimiento():
             </html>
             """
 
+        contador = 0
+
         for archivo in archivos:
 
             if archivo.filename == "":
@@ -246,36 +297,41 @@ def mantenimiento():
                 if extension not in EXTENSIONES_PERMITIDAS:
                     continue
 
+                contador += 1
+
                 ruta_archivo = os.path.join(
                     carpeta_mtto,
                     nombre_seguro
                 )
 
+                if os.path.exists(ruta_archivo):
+
+                    nombre_seguro = (
+                        f"{datetime.now().strftime('%H%M%S')}_{nombre_seguro}"
+                    )
+
+                    ruta_archivo = os.path.join(
+                        carpeta_mtto,
+                        nombre_seguro
+                    )
+
+                print(
+                   "GUARDANDO EN:"
+                )
+
+                print(
+                    ruta_archivo
+                )
+
                 archivo.save(ruta_archivo)
 
-                extension_convertir = {
-                    "heic",
-                    "heif",
-                    "png",
-                    "webp",
-                    "bmp",
-                    "gif",
-                    "tif",
-                    "tiff"
-                }
+                print(
+                    "GUARDADO OK:"
+                )
 
-                if extension in extension_convertir:
-
-                    print("Convirtiendo:", ruta_archivo)
-
-                    ruta_archivo = convertir_a_jpg(
-                        ruta_archivo
-                    )
-
-                    print(
-                        "Convertido a:",
-                        ruta_archivo
-                    )
+                print(
+                    ruta_archivo
+                )
 
             except Exception as e:
 
@@ -285,6 +341,9 @@ def mantenimiento():
 
                 print(e)
 
+        print(
+            f"TOTAL EVIDENCIAS GUARDADAS: {contador}"
+        )
         libro = load_workbook(
             ARCHIVO_EXCEL
         )
@@ -328,30 +387,121 @@ def mantenimiento():
         )
 
         return f"""
-        <html>
-        <body style='font-family:Arial'>
+        <!DOCTYPE html>
+        <html lang="es">
 
-        <h2>Mantenimiento guardado correctamente</h2>
+        <head>
 
-        <h3>ID generado:</h3>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <h1>{id_mtto}</h1>
+        <title>Mantenimiento Guardado</title>
 
-        <p>Las evidencias fueron almacenadas correctamente en SharePoint.:</p>
+        <style>
 
-        <b>ID: {id_mtto}</b>
+        body{{
+            background:#8BC34A;
+            font-family:Arial,sans-serif;
+            margin:0;
+            padding:20px;
+        }}
 
-        <br><br>
+        .contenedor{{
+            max-width:700px;
+            margin:30px auto;
+            background:white;
+            border-radius:15px;
+            padding:40px;
+            text-align:center;
+            box-shadow:0 4px 10px rgba(0,0,0,0.2);
+        }}
 
-        <button onclick="window.location.href='/mantenimiento'">
-        Crear otro mantenimiento
-        </button>
+        .check{{
+            font-size:70px;
+        }}
 
-        <br><br>
+        h1{{
+            color:#2E7D32;
+            margin-top:10px;
+        }}
 
-        <button onclick="window.location.href='/'">
-        Volver al menú
-        </button>
+        .id-box{{
+            background:#f5f5f5;
+            border-left:6px solid #4CAF50;
+            padding:20px;
+            border-radius:10px;
+            margin:30px 0;
+        }}
+
+        .id-box p{{
+            font-size:32px;
+            font-weight:bold;
+            margin:10px 0;
+            word-break:break-word;
+        }}
+
+        .boton{{
+            display:block;
+            width:100%;
+            max-width:450px;
+            margin:15px auto;
+            padding:18px;
+            background:#5D7A1E;
+            color:white;
+            text-decoration:none;
+            border-radius:10px;
+            font-size:18px;
+            font-weight:bold;
+            text-align:center;
+        }}
+
+        .boton:hover{{
+            background:#4F6819;
+        }}
+
+        @media(max-width:768px){{
+            .contenedor{{
+                padding:25px;
+            }}
+
+            .id-box p{{
+                font-size:24px;
+            }}
+        }}
+
+        </style>
+
+        </head>
+
+        <body>
+
+        <div class="contenedor">
+
+        <div class="check">✔️</div>
+
+        <p style="color:#666;font-size:14px;">
+        Las evidencias y la información fueron registradas exitosamente.
+        </p>
+
+        <h1>Mantenimiento Guardado Correctamente</h1>
+
+        <div class="id-box">
+            <h3>ID Generado</h3>
+            <p>{id_mtto}</p>
+        </div>
+
+        <p>
+        Las evidencias fueron almacenadas correctamente.
+        </p>
+
+        <a href="/mantenimiento" class="boton">
+        📝 Crear Otro Mantenimiento
+        </a>
+
+        <a href="/" class="boton">
+        🏠 Volver al Menú Principal
+        </a>
+        </div>
 
         </body>
         </html>
@@ -381,11 +531,16 @@ def detalle(id_mtto):
 
     registro = registro.iloc[0]
 
-    ruta = str(registro["RutaLocal"])
+    archivos = []
 
-    if ruta == "nan":
-        return "No existe ruta de evidencias para este mantenimiento"
+    if "RutaLocal" in registro.index:
 
+        ruta = str(registro["RutaLocal"])
+
+        if ruta != "nan" and os.path.exists(ruta):
+
+            archivos = os.listdir(ruta)
+    
     print("Ruta encontrada:", ruta)
     print("Existe carpeta:", os.path.exists(ruta))
 
@@ -512,7 +667,7 @@ def comisionamiento():
         ano = str(fecha_actual.year)
         mes = meses[fecha_actual.month]
 
-        RUTA_SHAREPOINT_COM = r"C:\Users\JessidFabianHernande\OneDrive - ERCO ENERGIA SAS\AOM - 001_AOM_COMERCIAL&INDUSTRIAL\02_Ejecucion\2.4_AOM_Centro\2.4.4_Mantenimiento\2.4.4.3_Anexos\02. Comisionamientos"
+        RUTA_SHAREPOINT_COM = r"C:\Users\Usuario\OneDrive - ERCO ENERGIA SAS\AOM - 001_AOM_COMERCIAL&INDUSTRIAL\02_Ejecucion\2.4_AOM_Centro\2.4.4_Mantenimiento\2.4.4.3_Anexos\02. Comisionamientos"
         
         carpeta_com = os.path.join(
             RUTA_SHAREPOINT_COM,

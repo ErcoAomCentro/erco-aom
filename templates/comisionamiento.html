@@ -3,11 +3,16 @@
 
 <head>
 
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Comisionamiento</title>
 
 <style>
+
+*{
+    box-sizing:border-box;
+}
 
 body{
     background:#9CCC65;
@@ -28,8 +33,12 @@ select{
     width:100%;
     padding:12px;
     margin-bottom:15px;
-    box-sizing:border-box;
     font-size:16px;
+}
+
+textarea{
+    min-height:120px;
+    resize:vertical;
 }
 
 button{
@@ -43,8 +52,25 @@ button{
     border-radius:5px;
 }
 
+button:disabled{
+    background:#8d8d8d;
+    cursor:not-allowed;
+}
+
 h2{
     text-align:center;
+}
+
+#cargando{
+    display:none;
+    margin-top:20px;
+    padding:15px;
+    background:#fff3cd;
+    border:1px solid #ffeeba;
+    color:#856404;
+    font-weight:bold;
+    text-align:center;
+    border-radius:5px;
 }
 
 @media (max-width:768px){
@@ -83,23 +109,28 @@ h2{
 
 <h2>FORMULARIO DE COMISIONAMIENTO</h2>
 
-<form method="POST" enctype="multipart/form-data">
+<form
+id="formComisionamiento"
+method="POST"
+enctype="multipart/form-data">
 
 <label>Proyecto</label>
 
-<select name="proyecto" required>
+<select
+name="proyecto"
+required>
 
-    <option value="">
-    Seleccione Proyecto
-    </option>
+<option value="">
+Seleccione Proyecto
+</option>
 
-    {% for proyecto in proyectos %}
+{% for proyecto in proyectos %}
 
-    <option value="{{ proyecto }}">
-    {{ proyecto }}
-    </option>
+<option value="{{ proyecto }}">
+{{ proyecto }}
+</option>
 
-    {% endfor %}
+{% endfor %}
 
 </select>
 
@@ -123,13 +154,13 @@ required>
 name="tipocomisionamiento"
 required>
 
-    <option value="">
-    Seleccione Tipo
-    </option>
+<option value="">
+Seleccione Tipo
+</option>
 
-    <option>Precomisionamiento</option>
-    <option>Comisionamiento</option>
-    <option>Puesta en Servicio</option>
+<option>Precomisionamiento</option>
+<option>Comisionamiento</option>
+<option>Puesta en Servicio</option>
 
 </select>
 
@@ -153,17 +184,64 @@ required></textarea>
 type="file"
 name="evidencias"
 multiple
+accept=".jpg,.jpeg,.png,.heic,.heif,.webp,.bmp,.gif,.tif,.tiff,.pdf"
 required>
 
-<button type="submit">
+<button
+id="btnGuardar"
+type="submit">
 
 Guardar Comisionamiento
 
 </button>
 
+<div id="cargando">
+
+⏳ Guardando información y evidencias.<br><br>
+
+Por favor espere...<br><br>
+
+⚠️ No cierre esta ventana ni actualice la página.<br>
+
+Si está cargando muchas fotografías el proceso puede tardar varios minutos.
+
+</div>
+
 </form>
 
 </div>
+
+<script>
+
+document
+.getElementById("formComisionamiento")
+.addEventListener(
+    "submit",
+    function(){
+
+        document
+        .getElementById(
+            "btnGuardar"
+        )
+        .disabled = true;
+
+        document
+        .getElementById(
+            "btnGuardar"
+        )
+        .innerHTML =
+        "Guardando información...";
+
+        document
+        .getElementById(
+            "cargando"
+        )
+        .style.display =
+        "block";
+    }
+);
+
+</script>
 
 </body>
 
